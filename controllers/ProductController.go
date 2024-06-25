@@ -48,3 +48,15 @@ func InsertProduct(w http.ResponseWriter, r *http.Request) {
 
 	http.Redirect(w, r, "/", 301)
 }
+
+func DeleteProduct(w http.ResponseWriter, r *http.Request) {
+	idProduct := r.URL.Query().Get("id")
+	models.DeleteProductById(idProduct)
+	http.Redirect(w, r, "/", 301)
+}
+
+func EditProduct(w http.ResponseWriter, r *http.Request) {
+	idProduct := r.URL.Query().Get("id")
+	product := models.EditProductById(idProduct)
+	temp.ExecuteTemplate(w, "EditProduct", product)
+}

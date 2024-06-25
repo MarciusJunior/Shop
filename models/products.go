@@ -1,6 +1,8 @@
 package models
 
-import "Shop/db"
+import (
+	"Shop/db"
+)
 
 type Product struct {
 	Id          int
@@ -32,6 +34,7 @@ func FindAllProducts() []Product {
 			panic(err.Error())
 		}
 
+		p.Id = id
 		p.Name = name
 		p.Description = description
 		p.Quantity = quantity
@@ -55,4 +58,50 @@ func CreateNewProduct(name, description string, quantity int, price float64, sco
 	insertData.Exec(name, description, quantity, price, score)
 
 	defer db.Close()
+}
+
+func DeleteProductById(id string) {
+	db := db.ConnectDatabase()
+
+	deleteProduct, err := db.Prepare("delete from products where id=$1")
+
+	if err != nil {
+		panic(err.Error())
+	}
+
+	deleteProduct.Exec(id)
+
+	defer db.Close()
+}
+
+func EditProductById(id string) Product {
+	db := db.ConnectDatabase()
+
+	productFromData, err := db.Query("select * from products where id=$1", id)
+
+	if err != nil {
+		panic(err.Error())
+	}
+
+	productForEdit := Product{}
+
+	for productFromData.Next() {
+		var id, quantity, score int
+		var name, description string
+		var price float64
+
+		err = productFromData.Scan(&id, &name, &description, &quantity, &price, &score)
+		if err != nil {
+			panic(err.Error())
+		}
+
+		productForEdit.Name = name
+		productForEdit.Description = description
+		productForEdit.Quantity = quantity
+		productForEdit.Price = price
+		productForEdit.Score = score
+	}
+
+	defer db.Close()
+	return productForEdit
 }
