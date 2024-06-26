@@ -77,8 +77,7 @@ func DeleteProductById(id string) {
 func EditProductById(id string) Product {
 	db := db.ConnectDatabase()
 
-	productFromData, err := db.Query("select * from products where id=$1", id)
-
+	productFromData, err := db.Query("SELECT * FROM products where id=$1", id)
 	if err != nil {
 		panic(err.Error())
 	}
@@ -95,6 +94,7 @@ func EditProductById(id string) Product {
 			panic(err.Error())
 		}
 
+		productForEdit.Id = id
 		productForEdit.Name = name
 		productForEdit.Description = description
 		productForEdit.Quantity = quantity
@@ -104,4 +104,15 @@ func EditProductById(id string) Product {
 
 	defer db.Close()
 	return productForEdit
+}
+
+func UpdateProduct(id int, name, description string, quantity int, price float64, score int) {
+	db := db.ConnectDatabase()
+
+	UpdateProduct, err := db.Prepare("update products set name=$1, description=$2, quantity=$3, price=$4, score=$5 where id=$6")
+	if err != nil {
+		panic(err.Error())
+	}
+	UpdateProduct.Exec(name, description, quantity, price, score, id)
+	defer db.Close()
 }

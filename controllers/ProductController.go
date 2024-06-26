@@ -60,3 +60,37 @@ func EditProduct(w http.ResponseWriter, r *http.Request) {
 	product := models.EditProductById(idProduct)
 	temp.ExecuteTemplate(w, "EditProduct", product)
 }
+
+func UpdateProduct(w http.ResponseWriter, r *http.Request) {
+	if r.Method == "POST" {
+		id := r.FormValue("id")
+		name := r.FormValue("name")
+		description := r.FormValue("description")
+		quantity := r.FormValue("quantity")
+		price := r.FormValue("price")
+		score := r.FormValue("score")
+
+		convertId, err := strconv.Atoi(id)
+		if err != nil {
+			log.Println("Error converting id", err)
+		}
+
+		convertPrice, err := strconv.ParseFloat(price, 64)
+		if err != nil {
+			log.Println("Error converting price", err)
+		}
+
+		convertQuantity, err := strconv.Atoi(quantity)
+		if err != nil {
+			log.Println("Error converting quantity", err)
+		}
+
+		convertScore, err := strconv.Atoi(score)
+		if err != nil {
+			log.Println("Error converting score", err)
+		}
+
+		models.UpdateProduct(convertId, name, description, convertQuantity, convertPrice, convertScore)
+	}
+	http.Redirect(w, r, "/", 301)
+}

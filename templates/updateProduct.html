@@ -9,8 +9,8 @@
             <p class="lead">Insert the details for Edit</p>
         </div>
     </div>
-    <form method="POST" action="editProduct">
-        <input type="hidden" name="id" value="{{.Id}}">
+    <form method="POST" action="update">
+        <input type="hidden" name="id" value="{{.Id}}" >
         <div class="row">
             <div class="col-sm-8">
                 <div class="form-group">
@@ -31,7 +31,7 @@
             <div class="col-sm-2">
                 <div class="form-group">
                     <label for="quantity">Quantity:</label>
-                    <input type="number" name="quantity" class="form-control" step="0.01" value="{{.Quantity}}">
+                    <input type="number" name="quantity" class="form-control" step="0" value="{{.Quantity}}">
                 </div>
             </div>
         </div>
